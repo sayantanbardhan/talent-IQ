@@ -9,12 +9,12 @@ import { inngest, functions } from "./lib/inngest.js";
 const app = express();
 const __dirname = path.resolve();
 
+app.use("/api/inngest", serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
+
 //middleware
 app.use(express.json());
 // credentials: true => server allowes browser to include cookies in requests
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
-
-app.use("/api/inngest", serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
 
 app.get("/health", (req, res) => {
     res.status(200).json({ msg: "Api is up and running" })
