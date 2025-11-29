@@ -14,7 +14,7 @@ app.use(express.json());
 // credentials: true => server allowes browser to include cookies in requests
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 
-app.use("/api/inngest", serve({client:inngest, functions})); 
+app.use("/api/inngest", serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
 
 app.get("/health", (req, res) => {
     res.status(200).json({ msg: "Api is up and running" })
@@ -25,9 +25,9 @@ app.get("/books", (req, res) => {
 });
 
 //make app ready for deployment
-if (ENV.NODE_ENV === "production"){
+if (ENV.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
-    
+
     app.get("/{*any}", (req, res) => {
         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
     });
